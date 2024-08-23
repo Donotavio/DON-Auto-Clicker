@@ -3,129 +3,129 @@ section .data
     msgClickPrompt db 'Enter clicks per minute (use 60 for clicks per second): ', 0
     msgRunning db 'Running auto clicker...', 0
     msgFinished db 'Auto clicker finished.', 0
-    duration dd 0                  ; Duração em segundos (0 = infinito)
-    clicksPerMinute dd 60          ; Cliques por minuto (60 = 1 clique por segundo)
-    interval dd 0                  ; Intervalo calculado entre cliques
-    clickCount dd 0                ; Contador de cliques
-    maxClicks dd 0                 ; Máximo de cliques permitidos (com base no tempo)
+    duration dd 0                  ; Duration in seconds (0 = infinite)
+    clicksPerMinute dd 60          ; Clicks per minute (60 = 1 click per second)
+    interval dd 0                  ; Calculated interval between clicks
+    clickCount dd 0                ; Click counter
+    maxClicks dd 0                 ; Maximum allowed clicks (based on duration)
 
 section .bss
-    userInput resb 4               ; Buffer para entrada do usuário
+    userInput resb 4               ; Buffer for user input
 
 section .text
     global _start
 
 _start:
-    ; Solicita a duração do usuário
+    ; Prompt the user for duration
     call PromptDuration
 
-    ; Solicita o número de cliques por minuto
+    ; Prompt the user for clicks per minute
     call PromptClicksPerMinute
 
-    ; Calcula o intervalo entre cliques (em milissegundos)
+    ; Calculate the interval between clicks (in milliseconds)
     call CalculateInterval
 
-    ; Inicializa o contador de cliques e outros parâmetros
+    ; Initialize the click counter and other parameters
     mov eax, dword [interval]
-    xor ecx, ecx                    ; Contador de cliques começa em 0
+    xor ecx, ecx                    ; Click counter starts at 0
 
-    ; Se o tempo for finito, calcula o número máximo de cliques
+    ; If time is finite, calculate the maximum number of clicks
     cmp dword [duration], 0
     jne .calc_max_clicks
-    mov dword [maxClicks], -1       ; Infinito (representado por -1)
+    mov dword [maxClicks], -1       ; Infinite (represented by -1)
     jmp click_loop
 
 .calc_max_clicks:
-    ; Calcula o número máximo de cliques permitidos dentro da duração
+    ; Calculate the maximum number of clicks allowed within the duration
     mov eax, dword [duration]
     imul eax, dword [clicksPerMinute]
-    cdq                             ; Extende EAX em EDX para dividir
+    cdq                             ; Extend EAX into EDX for division
     idiv dword [interval]
     mov dword [maxClicks], eax
 
 click_loop:
-    ; Verifica se atingiu o número máximo de cliques (se aplicável)
+    ; Check if the maximum number of clicks has been reached (if applicable)
     cmp dword [clickCount], dword [maxClicks]
     jge end_click
 
-    ; Realiza clique do mouse
+    ; Perform mouse click
     call MouseClick
 
-    ; Incrementa o contador de cliques
+    ; Increment the click counter
     inc dword [clickCount]
 
-    ; Espera pelo intervalo antes do próximo clique
+    ; Wait for the interval before the next click
     call Sleep
 
-    ; Volta para o loop de clique
+    ; Return to the click loop
     jmp click_loop
 
 end_click:
-    ; Exibe mensagem de conclusão
+    ; Display completion message
     push 0
     push msgFinished
     push 0
     push 0
     call MessageBoxA
 
-    ; Termina o programa
+    ; Terminate the program
     push 0
     call ExitProcess
 
-; Rotina para solicitar duração do usuário
+; Routine to prompt the user for duration
 PromptDuration:
-    ; Exibe mensagem para o usuário
+    ; Display message to the user
     push 0
     push msgTimePrompt
     push 0
     push 0
     call MessageBoxA
 
-    ; Lê a entrada do usuário
-    ; Aqui, por simplicidade, assumimos que a entrada foi recebida
-    ; de alguma forma e armazenada em [userInput]
-    ; Simulação de entrada:
-    mov dword [userInput], 10       ; Exemplo: duração de 10 segundos
+    ; Read user input
+    ; Here, for simplicity, we assume the input has been received
+    ; somehow and stored in [userInput]
+    ; Input simulation:
+    mov dword [userInput], 10       ; Example: 10 seconds duration
 
-    ; Converte a entrada para número e armazena em [duration]
+    ; Convert input to a number and store in [duration]
     mov eax, dword [userInput]
     mov dword [duration], eax
     ret
 
-; Rotina para solicitar cliques por minuto
+; Routine to prompt the user for clicks per minute
 PromptClicksPerMinute:
-    ; Exibe mensagem para o usuário
+    ; Display message to the user
     push 0
     push msgClickPrompt
     push 0
     push 0
     call MessageBoxA
 
-    ; Lê a entrada do usuário
-    ; Aqui, por simplicidade, assumimos que a entrada foi recebida
-    ; de alguma forma e armazenada em [userInput]
-    ; Simulação de entrada:
-    mov dword [userInput], 60       ; Exemplo: 60 cliques por minuto
+    ; Read user input
+    ; Here, for simplicity, we assume the input has been received
+    ; somehow and stored in [userInput]
+    ; Input simulation:
+    mov dword [userInput], 60       ; Example: 60 clicks per minute
 
-    ; Converte a entrada para número e armazena em [clicksPerMinute]
+    ; Convert input to a number and store in [clicksPerMinute]
     mov eax, dword [userInput]
     mov dword [clicksPerMinute], eax
     ret
 
-; Rotina para calcular o intervalo entre cliques
+; Routine to calculate the interval between clicks
 CalculateInterval:
-    ; Calcula o intervalo entre cliques (em milissegundos)
-    ; intervalo = 60000 / cliques por minuto
-    mov eax, 60000                  ; 60000 ms (1 minuto)
-    cdq                             ; Extende EAX em EDX para dividir
+    ; Calculate the interval between clicks (in milliseconds)
+    ; interval = 60000 / clicks per minute
+    mov eax, 60000                  ; 60000 ms (1 minute)
+    cdq                             ; Extend EAX into EDX for division
     idiv dword [clicksPerMinute]
     mov dword [interval], eax
     ret
 
-; Rotina para realizar clique do mouse (exemplo para Windows)
+; Routine to perform mouse click (example for Windows)
 MouseClick:
-    ; Usa a função de chamada de sistema para o clique
-    ; (botão esquerdo: down e up)
+    ; Use the system call for mouse click
+    ; (left button: down and up)
     push 0x04
     push 0x02
     push 0
@@ -133,9 +133,9 @@ MouseClick:
     call mouse_event
     ret
 
-; Rotina para sleep (multiplataforma)
+; Routine for sleep (cross-platform)
 Sleep:
-    ; Função Sleep para Windows
+    ; Sleep function for Windows
     push dword [interval]
     call Sleep
     ret
