@@ -131,4 +131,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 💬 Join the Community
 
-If you have any questions, suggestions, or just want to chat about Assembly programming, join the discussion on our [GitHub Discussions](https://github.com/yourusername/auto-clicker-assembly/discussions) page!
+If you have any questions, suggestions, or just want to chat about Assembly programming, join the discussion on our [GitHub Discussions](https://github.com/Donotavio/DON-Auto-Clicker/discussions) page!
