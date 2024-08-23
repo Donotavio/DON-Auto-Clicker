@@ -26,53 +26,55 @@ To get started, you'll need the following tools installed:
 
 ### Compilation Instructions
 
-#### Windows
+#### Automatic Setup & Compilation
 
-1. **Clone the repository**:
+You can automatically detect your operating system, install dependencies, and compile the project with a single command:
+
+```bash
+make all
+```
+
+**Options**:
+- `-y`, `--yes`: Automatically confirm all prompts during dependency installation.
+- `-h`, `--help`: Display help information.
+
+For example, to run the setup and compilation with automatic confirmation of prompts:
+
+```bash
+make all -y
+```
+
+#### Manual Compilation by Platform
+
+If you prefer to manually compile the project for a specific platform:
+
+**Windows**:
+1. **Compile and link**:
     ```bash
-    git clone https://github.com/yourusername/auto-clicker-assembly.git
-    cd auto-clicker-assembly
+    make windows
+    ```
+    or with automatic confirmation:
+    ```bash
+    make windows -y
     ```
 
-2. **Compile and link**:
+**Linux/macOS**:
+1. **Compile and link**:
     ```bash
-    nasm -f win32 src/autoclick.asm -o autoclick.obj
-    ld autoclick.obj -o autoclick.exe -luser32 -lkernel32
+    make linux
+    ```
+    or with automatic confirmation:
+    ```bash
+    make linux -y
     ```
 
-3. **Run the program**:
-    ```bash
-    autoclick.exe
-    ```
+#### Cleaning Up
 
-#### Linux/macOS
+To remove compiled files and reset the environment:
 
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/auto-clicker-assembly.git
-    cd auto-clicker-assembly
-    ```
-
-2. **Install xdotool** (if not already installed):
-    - Linux:
-        ```bash
-        sudo apt-get install xdotool
-        ```
-    - macOS:
-        ```bash
-        brew install xdotool
-        ```
-
-3. **Compile and link**:
-    ```bash
-    nasm -f elf32 src/autoclick.asm -o autoclick.o
-    ld -m elf_i386 autoclick.o -o autoclick
-    ```
-
-4. **Run the program**:
-    ```bash
-    ./autoclick
-    ```
+```bash
+make clean
+```
 
 ## 🎮 Usage
 
