@@ -1,3 +1,5 @@
+ ---
+
 # 🖱️ Auto Clicker in Assembly
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -47,13 +49,13 @@ make all
 ```
 
 **Options**:
-- `-y`, `--yes`: Automatically confirm all prompts during dependency installation.
+- `YES=yes`: Automatically confirm all prompts during dependency installation.
 - `-h`, `--help`: Display help information.
 
 For example, to run the setup and compilation with automatic confirmation of prompts:
 
 ```bash
-make all -y
+make all YES=yes
 ```
 
 #### Manual Compilation by Platform
@@ -67,7 +69,7 @@ If you prefer to manually compile the project for a specific platform:
     ```
     or with automatic confirmation:
     ```bash
-    make windows -y
+    make windows YES=yes
     ```
 
 **Linux/macOS**:
@@ -77,7 +79,7 @@ If you prefer to manually compile the project for a specific platform:
     ```
     or with automatic confirmation:
     ```bash
-    make linux -y
+    make linux YES=yes
     ```
 
 #### Cleaning Up
@@ -144,3 +146,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 💬 Join the Community
 
 If you have any questions, suggestions, or just want to chat about Assembly programming, join the discussion on our [GitHub Discussions](https://github.com/yourusername/auto-clicker-assembly/discussions) page!
+
+---

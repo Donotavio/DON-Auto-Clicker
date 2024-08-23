@@ -1,12 +1,12 @@
 SRC=src/autoclick.asm
 OBJ=autoclick.o
 EXEC=autoclick
-YES_FLAG :=
+YES_FLAG := $(YES)
 
 # Determine the operating system
 UNAME_S := $(shell uname -s)
 
-# Check for user confirmation unless the -y or --yes flag is set
+# Check for user confirmation unless the YES variable is set
 confirm:
 	@if [ "$(YES_FLAG)" = "yes" ]; then \
 		echo "Auto-confirming all prompts."; \
@@ -57,9 +57,9 @@ clean:
 # Main function to detect the system, install dependencies, and compile automatically
 all:
 	@if [ "$(UNAME_S)" = "Linux" ] || [ "$(UNAME_S)" = "Darwin" ]; then \
-		$(MAKE) linux; \
+		$(MAKE) linux YES=$(YES_FLAG); \
 	elif [ "$(UNAME_S)" = "Windows_NT" ]; then \
-		$(MAKE) windows; \
+		$(MAKE) windows YES=$(YES_FLAG); \
 	else \
 		echo "Unsupported OS: $(UNAME_S)"; \
 		exit 1; \
@@ -77,14 +77,11 @@ help:
 	@echo "  help       Show this help message."
 	@echo ""
 	@echo "Options:"
-	@echo "  -y, --yes  Auto-confirm all prompts."
+	@echo "  YES=yes    Auto-confirm all prompts."
 	@echo "  -h, --help Show help information."
 
 # Check for options
 check_options:
-	@if [ "$(filter -y,$(MAKECMDGOALS))" ] || [ "$(filter --yes,$(MAKECMDGOALS))" ]; then \
-		YES_FLAG=yes; \
-	fi
 	@if [ "$(filter -h,$(MAKECMDGOALS))" ] || [ "$(filter --help,$(MAKECMDGOALS))" ]; then \
 		$(MAKE) help; \
 		exit 0; \
