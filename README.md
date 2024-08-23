@@ -14,6 +14,18 @@ Welcome to **Auto Clicker in Assembly**, a lightweight and super fast auto click
 - **Lightweight**: Written in Assembly, offering minimal overhead and maximum performance.
 - **Open Source**: Released under the MIT License, so you can freely use, modify, and distribute the code.
 
+## 💡 When to Use This Auto Clicker
+
+The Auto Clicker in Assembly can be particularly useful in the following scenarios:
+
+- **Automated Testing**: When you need to simulate mouse clicks at specific intervals to test UI elements or software behavior.
+- **Repetitive Tasks**: For automating repetitive clicking tasks in games, data entry applications, or any software that requires frequent mouse clicks.
+- **Stress Testing**: Use it to stress test software or hardware by simulating a high volume of clicks over a set period.
+- **Assisting with Accessibility**: Automate clicks for users who may have difficulty performing repetitive mouse actions.
+- **Learning and Experimentation**: Great for developers and learners interested in exploring low-level programming with Assembly and understanding how to manipulate mouse input programmatically.
+
+Please use this tool responsibly and ensure that your use cases comply with any terms of service, licensing agreements, or ethical guidelines related to the software or environment where it will be deployed.
+
 ## 🛠️ Installation & Setup
 
 ### Requirements
@@ -131,4 +143,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 💬 Join the Community
 
-If you have any questions, suggestions, or just want to chat about Assembly programming, join the discussion on our [GitHub Discussions](https://github.com/Donotavio/DON-Auto-Clicker/discussions) page!
+If you have any questions, suggestions, or just want to chat about Assembly programming, join the discussion on our [GitHub Discussions](https://github.com/yourusername/auto-clicker-assembly/discussions) page!
