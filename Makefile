@@ -1,6 +1,9 @@
-SRC=src/autoclick.asm
-OBJ=autoclick.o
-EXEC=autoclick
+SRC_ASM=src/autoclick.asm
+SRC_C=src/autoclick.c
+OBJ_ASM=autoclick.o
+OBJ_C=autoclick
+EXEC_ASM=autoclick
+EXEC_C=autoclick
 YES_FLAG := $(YES)
 
 # Determine the operating system
@@ -19,8 +22,8 @@ confirm:
 		fi; \
 	fi
 
-# Function to check and install dependencies on Linux/macOS
-install_dependencies_linux:
+# Function to check and install dependencies on Linux/macOS for Assembly
+install_dependencies_linux_asm:
 	@if ! [ -x "$$(command -v nasm)" ]; then \
 		echo "NASM is not installed."; \
 		$(MAKE) confirm; \
@@ -32,34 +35,79 @@ install_dependencies_linux:
 		sudo apt-get install xdotool || brew install xdotool; \
 	fi
 
-# Function to check and install dependencies on Windows (via Chocolatey)
-install_dependencies_windows:
+# Function to check and install dependencies on Linux/macOS for C
+install_dependencies_linux_c:
+	@if ! [ -x "$$(command -v gcc)" ]; then \
+		echo "GCC is not installed."; \
+		$(MAKE) confirm; \
+		sudo apt-get install gcc || sudo yum install gcc || brew install gcc; \
+	fi
+	@if ! [ -x "$$(command -v brew)" ]; then \
+		echo "Homebrew is not installed."; \
+		$(MAKE) confirm; \
+		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+	fi
+	@if ! [ -x "$$(command -v cliclick)" ]; then \
+		echo "cliclick is not installed (for macOS)."; \
+		$(MAKE) confirm; \
+		brew install cliclick; \
+	fi
+
+# Function to check and install dependencies on Windows (via Chocolatey) for Assembly
+install_dependencies_windows_asm:
 	@if ! [ -x "$$(command -v nasm)" ]; then \
 		echo "NASM is not installed."; \
 		$(MAKE) confirm; \
 		choco install nasm -y; \
 	fi
 
-# Compilation for Windows
-windows: install_dependencies_windows
-	nasm -f win32 $(SRC) -o $(OBJ)
-	ld $(OBJ) -o $(EXEC).exe -luser32 -lkernel32
+# Function to check and install dependencies on Windows (via Chocolatey) for C
+install_dependencies_windows_c:
+	@if ! [ -x "$$(command -v gcc)" ]; then \
+		echo "GCC is not installed."; \
+		$(MAKE) confirm; \
+		choco install mingw -y; \
+	fi
 
-# Compilation for Linux/MacOS
-linux: install_dependencies_linux
-	nasm -f elf32 $(SRC) -o $(OBJ)
-	ld -m elf_i386 $(OBJ) -o $(EXEC)
+# Compilation for Windows (Assembly)
+windows_asm: install_dependencies_windows_asm
+	nasm -f win32 $(SRC_ASM) -o $(OBJ_ASM)
+	ld $(OBJ_ASM) -o $(EXEC_ASM).exe -luser32 -lkernel32
+
+# Compilation for Windows (C)
+windows_c: install_dependencies_windows_c
+	gcc $(SRC_C) -o $(EXEC_C).exe
+
+# Compilation for Linux/MacOS (Assembly)
+linux_asm: install_dependencies_linux_asm
+	nasm -f elf32 $(SRC_ASM) -o $(OBJ_ASM)
+	ld -m elf_i386 $(OBJ_ASM) -o $(EXEC_ASM)
+
+# Compilation for Linux/MacOS (C)
+linux_c: install_dependencies_linux_c
+	gcc $(SRC_C) -o $(EXEC_C) -lX11 -lXtst
 
 # Clean up compiled files
 clean:
-	rm -f $(OBJ) $(EXEC) $(EXEC).exe
+	rm -f $(OBJ_ASM) $(EXEC_ASM) $(EXEC_ASM).exe $(EXEC_C) $(EXEC_C).exe
 
-# Main function to detect the system, install dependencies, and compile automatically
-all:
+# Main function to detect the system, install dependencies, and compile automatically for Assembly
+all_asm:
 	@if [ "$(UNAME_S)" = "Linux" ] || [ "$(UNAME_S)" = "Darwin" ]; then \
-		$(MAKE) linux YES=$(YES_FLAG); \
+		$(MAKE) linux_asm YES=$(YES_FLAG); \
 	elif [ "$(UNAME_S)" = "Windows_NT" ]; then \
-		$(MAKE) windows YES=$(YES_FLAG); \
+		$(MAKE) windows_asm YES=$(YES_FLAG); \
+	else \
+		echo "Unsupported OS: $(UNAME_S)"; \
+		exit 1; \
+	fi
+
+# Main function to detect the system, install dependencies, and compile automatically for C
+all_c:
+	@if [ "$(UNAME_S)" = "Linux" ] || [ "$(UNAME_S)" = "Darwin" ]; then \
+		$(MAKE) linux_c YES=$(YES_FLAG); \
+	elif [ "$(UNAME_S)" = "Windows_NT" ]; then \
+		$(MAKE) windows_c YES=$(YES_FLAG); \
 	else \
 		echo "Unsupported OS: $(UNAME_S)"; \
 		exit 1; \
@@ -70,9 +118,12 @@ help:
 	@echo "Usage: make [target] [OPTIONS]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  all        Detect system, install dependencies, and compile automatically."
-	@echo "  windows    Compile for Windows."
-	@echo "  linux      Compile for Linux/macOS."
+	@echo "  all_asm    Detect system, install dependencies, and compile automatically for Assembly."
+	@echo "  all_c      Detect system, install dependencies, and compile automatically for C."
+	@echo "  windows_asm Compile for Windows (Assembly)."
+	@echo "  windows_c  Compile for Windows (C)."
+	@echo "  linux_asm  Compile for Linux/macOS (Assembly)."
+	@echo "  linux_c    Compile for Linux/macOS (C)."
 	@echo "  clean      Clean up compiled files."
 	@echo "  help       Show this help message."
 	@echo ""
